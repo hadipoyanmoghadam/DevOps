@@ -4,3 +4,20 @@
 #Write a program that takes a number from the input,
 # compares it to 10, and returns a message for each of the 3 modes
 #  (larger, equal, and smaller).
+
+while [ -z $NUMBER ]
+do
+        read -p"Plese Insert Number:" NUMBER
+done
+
+NUMBER=`echo $NUMBER | tr -d [:alpha:]`
+
+if [ $NUMBER -eq 10 ]
+then
+        echo " $NUMBER is equal 10."
+elif [ $NUMBER -gt 10 ]
+then
+        echo "$NUMBER is greater than 10."
+else
+        echo "$NUMBER is less than 10."
+fi
