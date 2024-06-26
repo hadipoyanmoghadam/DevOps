@@ -1,0 +1,40 @@
+#!/bin/bash
+
+#Exercise 2:
+#Write a program that takes 20 numbers from the input,
+#  compares them, and states which number is the largest and smallest.
+
+# This is read Number for user
+read -p "How many numbers do you want to enter? " count
+i=0
+#arrayName=()
+while [ $i -lt $count ]
+do
+        read -p "Please Insert "  arrayName[i]
+        i=`expr $i + 1`
+#       echo "$arrayName[i]"
+done
+
+# Use choose first element of array as initial values for min/max;
+# (Defensive programming) - this is a language-agnostic 'gotcha' when
+# finding min/max ;)
+max=${arrayName[0]}
+min=${arrayName[0]}
+
+# Loop through all elements in the array
+for i in "${arrayName[@]}"
+do
+    # Update max if applicable
+    if [[ "$i" -gt "$max" ]]; then
+        max="$i"
+    fi
+
+    # Update min if applicable
+    if [[ "$i" -lt "$min" ]]; then
+        min="$i"
+    fi
+done
+
+# Output results:
+echo "Max is: $max"
+echo "Min is: $min"

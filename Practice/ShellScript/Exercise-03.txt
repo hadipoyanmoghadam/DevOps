@@ -1,0 +1,21 @@
+#!/bin/bash
+
+#Exercise 3:
+#Write a program that has the IP of a server and its User/Pass in front of the Script
+#name and if it is pingable, sends its /etc/passwd file to /home/user path of that server,
+#otherwise a message displayed that the server is not accessible.
+
+
+read -p "Please insert ip address server: " ip
+read -p "Please insert User Server: " user
+read -p "Please insert Password Server: " password
+
+ping -c 1 $ip &> /dev/null
+
+if [ $? = 0  ]
+then
+  echo "success"
+  sshpass -p "$password" scp -r /etc/passwd $user@$ip:/home/hpo
+else
+  echo "error"
+fi

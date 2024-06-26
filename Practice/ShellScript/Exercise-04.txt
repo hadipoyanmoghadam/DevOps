@@ -1,0 +1,16 @@
+#!/bin/bash
+
+#Exercise 4:
+# Write a program that prints from 5 to 50 on the screen.
+
+for i in {5..50}
+do
+    echo "$i"
+done
+
+######################
+
+for ((i=5;i<=50;i++))
+do
+        echo "$i"
+done

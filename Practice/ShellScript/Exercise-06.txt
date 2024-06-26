@@ -1,0 +1,12 @@
+#!/bin/bash
+
+#Exercise 6:
+#Write a program that take a backup from home directory of your user
+#  after each time user logged out.
+
+
+########################################################
+# Insert  line into end of line  .bash_logout file
+########################################################
+
+tar -Jcvf ~/backup/`date +%Y%m%d-%H:%M`.tar.xz  ~
