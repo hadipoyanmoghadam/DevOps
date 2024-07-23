@@ -1,0 +1,10 @@
+#!/bin/bash
+
+#Exercise 5:
+# Write a program that saves the first and third fields of
+#  the /etc/passwd file every day in a file with the same
+#  date and does not hold it for more than two days.
+
+cut -d":" -f1,3 /etc/passwd  >>`date +%Y%m%d`.txt
+
+find . -type f  -mtime +2  -d

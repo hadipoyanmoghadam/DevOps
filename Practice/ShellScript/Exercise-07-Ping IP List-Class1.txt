@@ -1,0 +1,26 @@
+#!/bin/bash
+
+#Exercise 7:
+#  Write a program that reads, pings one by one from within a file containing
+#  the list of destination IPs, and saves the result in a log file on the
+#  same day with the hostname of that machine.
+
+FILENAME=pinglist1.txt
+TODAY=`date +%Y%m%d`
+OUTPUT=/home/ubuntu/log_$HOSTNAME_$TODAY.log
+
+cat $FILENAME | while read LINE
+do
+
+  ping -c 1 $LINE > /dev/null
+
+  
+  if [[ $? -eq 0 ]]
+  then
+    echo "$LINE PINGS">>$OUTPUT
+  else
+    echo "$LINE DOESN'T PING">>$OUTPUT
+  fi
+done
+
+
