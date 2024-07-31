@@ -1,0 +1,69 @@
+Step 1: Create a Dockerfile
+
+
+    # Use the official image as a parent image
+    FROM ubuntu:latest
+
+    # Update the system, install OpenSSH Server, and set up users
+    RUN apt update && apt-get upgrade -y && \
+        apt install  openssh-server net-tools vim
+
+    #Clear apt for Best image
+    RUN rm -rf /var/lib/apt/lists/* && \
+        rm -rf /var/cache/apt/archive/*
+
+    # Create user and set password for user and root user
+    RUN  useradd -rm -d /home/ubuntu -s /bin/bash -g root -G sudo -u 1000 ubuntu && \
+        echo 'ubuntu:secret_password' | chpasswd && \
+        echo 'root:secret_password' | chpasswd
+
+    # Set up configuration for SSH
+    RUN mkdir /var/run/sshd && \
+        sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
+        sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd && \
+        echo "export VISIBLE=now" >> /etc/profile
+
+    # Expose the SSH port
+    EXPOSE 22
+
+    # Run SSH
+    CMD ["/usr/sbin/sshd", "-D"]
+
+
+#  RUN mkdir /var/run/sshd is used to set up a directory /var/run/sshd
+#      inside the container. The SSH daemon requires this directory to function.
+
+# RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config”
+#     changes the sshd_config file to enable root password login,
+#     which means allowing the "root" user to log in using a password instead of relying
+#     on other authentication methods like SSH keys.
+
+# RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+#     modifies the Pluggable Authentication Module configuration for the SSH daemon to
+#     prevent possible issues with systemd.
+
+# CMD ["/usr/sbin/sshd", "-D"]
+#     specifies the default command to run when a container is started from this image.
+#     In this case, it starts the SSH daemon in the foreground with the -D option,
+#     allowing the container to keep running as long as the SSH server is active.
+
+#  Replace “secret_password” with the password you want to use for SSH. Save this Dockerfile.
+
+
+Step 2:Build the Docker Image
+
+    docker build -t ubuntu-ssh:V1.0 .
+
+Step 3: Run the Docker Container
+
+    docker run -dIT --name ubuntu-ssh -p 2222:22 ubuntu-ssh:V1.0
+
+Step 4: Find the IP address of the container
+
+    sudo Docker inspect --format='{{range .NetworkSettings.Networks}}\
+                                  {{.IPAddress}}{{end}}' ubuntu-ssh
+
+
+Step 5: Connect to the Docker Container via SSH
+
+    ssh ubuntu@<your_IP_address> -p 2222
