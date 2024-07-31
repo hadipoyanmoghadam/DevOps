@@ -1,6 +1,6 @@
 Step 1: Create a Dockerfile
 
-
+#----------------------------------------------------------------------------------------------------
     # Use the official image as a parent image
     FROM ubuntu:latest
 
@@ -28,7 +28,7 @@ Step 1: Create a Dockerfile
 
     # Run SSH
     CMD ["/usr/sbin/sshd", "-D"]
-
+#----------------------------------------------------------------------------------------------------
 
 #  RUN mkdir /var/run/sshd is used to set up a directory /var/run/sshd
 #      inside the container. The SSH daemon requires this directory to function.
@@ -49,21 +49,21 @@ Step 1: Create a Dockerfile
 
 #  Replace “secret_password” with the password you want to use for SSH. Save this Dockerfile.
 
-
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Step 2:Build the Docker Image
 
     docker build -t ubuntu-ssh:V1.0 .
-
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Step 3: Run the Docker Container
 
     docker run -dIT --name ubuntu-ssh -p 2222:22 ubuntu-ssh:V1.0
-
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Step 4: Find the IP address of the container
 
     sudo Docker inspect --format='{{range .NetworkSettings.Networks}}\
                                   {{.IPAddress}}{{end}}' ubuntu-ssh
 
-
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Step 5: Connect to the Docker Container via SSH
 
     ssh ubuntu@<your_IP_address> -p 2222
