@@ -1,0 +1,27 @@
+
+FROM ubuntu:latest
+
+RUN apt update
+RUN apt install net-tools
+RUN apt install wget -y
+RUN apt install openjdk-8-jdk -y
+RUN apt clean all
+
+RUN groupadd -g 200  nexus
+RUN useradd -u 200 -g nexus -s /bin/false -d /opt/nexus -c 'Nexus Repository Manager user' nexus
+#RUN useradd -m -s /bin/bash -c 'nexus' nexus
+
+#RUN cd /opt/nexus/
+RUN wget https://download.sonatype.com/nexus/3/nexus-3.70.1-02-java8-unix.tar.gz
+RUN tar -zxvf nexus-3.70.1-02-java8-unix.tar.gz
+
+RUN chown -R nexus:nexus /opt/nexus/nexus-3.70.1-02
+RUN chown -R nexus:nexus /opt/nexus/sonatype-work
+
+RUN sed -e "s/#run_as_user=""/run_as_user="nexus"/g" /opt/nexus/nexus-3.70.1-02/bin/nexus.rc
+
+
+WORKDIR /opt/nexus/
+USER nexus
+
+CMD ["/opt/nexus-3.70.1-02/bin/nexus","start"]
