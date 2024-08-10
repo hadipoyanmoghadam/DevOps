@@ -1,0 +1,29 @@
+#!/bin/bash
+
+
+BACKUP_PATH=/home/hpo/script-excersize
+LOG_FILE=/home/hpo/script-excersize/logfile.log
+
+echo "Backing up container data : `date +%Y%m%d-%H`"
+echo "++++++++++++++++++++++++++++++++++++++++++++++++++"
+
+for i in $(docker ps -a --format "{{.Names}}")
+do
+        CONTAINER_NAME=$i
+        echo -n "Start cycle backup as : $COMTAINER_NAME " | tee -a $LOG_FILE
+        mkdir -p "$BACKUP_PATH/$CONTAINER_NAME"
+
+        docker commit $CONTAINER_NAME $CONTAINER_NAME:`date +%Y%m%d-%H`
+
+        docker save $CONTAINER_NAME:`date +%Y%m%d-%H` -o $BACKUP_PATH/$CONTAINER_NAME/$CONTAINER_NAME-`date +%Y%m%d-%H`.tar
+
+        docker rmi $CONTAINER_NAME:`date +%Y%m%d-%H`
+
+        echo "Finish bacup cycle as : $COMTAINER_NAME" | tee -a $LOG_FILE
+
+done
+
+echo "Sucsese Full Backup ." | tee -a $LOG_FILE
+echo "++++++++++++++++++++++++++++++++++++++++++++++++++"
+
+find $BACKUP_PATH -type f -name *.tar  -cmin +1440 -delete
