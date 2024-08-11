@@ -13,13 +13,16 @@ for i in $(docker ps -a --format "{{.Names}}")
 do
         CONTAINER_NAME=$i
         echo -n "Start cycle backup as : $CONTAINER_NAME     " | tee -a $LOG_FILE
-        mkdir -p "$BACKUP_PATH/$CONTAINER_NAME" 
+        mkdir -p "$BACKUP_PATH/$CONTAINER_NAME"
 
-        docker commit $CONTAINER_NAME $CONTAINER_NAME:`date +%Y%m%d-%H` 
+        docker commit $CONTAINER_NAME $CONTAINER_NAME:`date +%Y%m%d-%H`
 
         docker save $CONTAINER_NAME:`date +%Y%m%d-%H` -o $BACKUP_PATH/$CONTAINER_NAME/$CONTAINER_NAME-`date +%Y%m%d-%H`.tar
 
         docker rmi $CONTAINER_NAME:`date +%Y%m%d-%H`
+
+        xz -v $BACKUP_PATH/$CONTAINER_NAME/$CONTAINER_NAME-`date +%Y%m%d-%H`.tar
+
 
         echo "Finish bacup cycle as : $CONTAINER_NAME     " | tee -a $LOG_FILE
 
@@ -30,12 +33,13 @@ echo `date +%Y%m%d-%H:%M` | tee -a $LOG_FILE
 echo "++++++++++++++++++++++++++++++++++++++++++++++++++" | tee -a $LOG_FILE
 echo ""
 
-find $BACKUP_PATH -type f -name *.tar  -cmin +1440 -delete
+find $BACKUP_PATH -type f -name *.tar.xz  -mmin +1440 -delete
+
 
 
 
 ##########################################
-###########  CRONTAB  ####################
-# (0 0-23 * * *  /root/Backup/script.sh)
+###########  CRON.hourly  ####################
+/etc/cron.hourly/script.sh
 ##########################################
 
