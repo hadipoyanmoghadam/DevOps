@@ -23,7 +23,7 @@ do
 
         xz -v $BACKUP_PATH/$CONTAINER_NAME/$CONTAINER_NAME-`date +%Y%m%d-%H`.tar
 
-
+	
         echo "Finish bacup cycle as : $CONTAINER_NAME     " | tee -a $LOG_FILE
 
 done
@@ -39,7 +39,7 @@ find $BACKUP_PATH -type f -name *.tar.xz  -mmin +1440 -delete
 
 
 ##########################################
-###########  CRON.hourly  ####################
-/etc/cron.hourly/script.sh
+###########  CRONTAB ####################
+0 0-23 * * * /root/Backup/script.sh
 ##########################################
 
