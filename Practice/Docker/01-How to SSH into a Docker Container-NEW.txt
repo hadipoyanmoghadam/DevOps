@@ -1,0 +1,19 @@
+FROM ubuntu:latest
+
+#Update alpain and REmove Cash
+RUN apt update && apt-get install -y openssh-server && rm -rf /var/lib/apt/listes/*
+
+# Create User and use USER
+RUN groupadd sshdu && \
+    useradd -m -g sshdu -c "SSH USER" sshdu && \
+    echo "sshdu:123456" | chpasswd && \
+    echo "root:123456" | chpasswd
+
+# Start ssh Service
+RUN service ssh start
+
+# Expose port 22 for ssh
+EXPOSE 22
+
+# Start the SSH server
+CMD ["/usr/sbin/sshd","-D"]

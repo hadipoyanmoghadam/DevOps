@@ -25,3 +25,29 @@ WORKDIR /opt/nexus/
 USER nexus
 
 CMD ["/opt/nexus-3.70.1-02/bin/nexus","start"]
+
+
+###################################################################################################
+
+FROM ubuntu:latest
+
+#Update alpain and REmove Cash
+RUN apt update && apt install net-tools && apt install wget -y && \
+    apt install openjdk-8-jdk -y &&rm -rf /var/lib/apt/listes/*
+
+WORKDIR /opt
+
+RUN groupadd -g 200  nexus && \
+    useradd -u 200 -m -g nexus   -c 'Nexus Repository Manager user' nexus
+
+COPY ./nexus-3.71.0-06-unix.tar.gz .
+RUN tar -zxvf nexus-3.71.0-06-unix.tar.gz
+RUN chown -R nexus:nexus /opt/nexus-3.71.0-06
+RUN chown -R nexus:nexus /opt/sonatype-work
+
+
+
+USER nexus
+
+# Start the Nexus server
+CMD ["/opt/nexus-3.71.0-06/bin/nexus","start"]

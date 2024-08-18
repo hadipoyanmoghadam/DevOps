@@ -1,0 +1,6 @@
+RUN apt install -y openjdk-8-jre-headless
+
+
+
+
+ERROR: failed to solve: process "/bin/sh -c apt install -y openjdk-8-jre-headless" did not complete successfully: exit code: 100
