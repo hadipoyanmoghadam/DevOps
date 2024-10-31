@@ -1,0 +1,6 @@
+Disabling Host Key Checking in Ansible: 
+the located in "/etc/ansible" directory  
+you have to open the "ansible.cfg" file 
+Now, inside the file, you must set 
+host_key_checking to False 
+to check ansible.
